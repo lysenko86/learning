@@ -1,0 +1,47 @@
+<!--
+    - Children - доступ до дочірні компонентів/елементів
+    - Children.only(children) - дозволяє вивести тільки один дочірній елемент,
+        якщо елементів більще - буде помилка
+    - Children.toArray(children) - перетворює дочірні елементи в масив
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>React.PropTypes</title>
+</head>
+<body>
+    <div id="react-container"></div>
+    <script src="https://unpkg.com/react@15.4.2/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.4.2/dist/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.29/browser.js"></script>
+
+    <script type="text/babel">
+        const findChild = (children, child) =>
+            React.Children.toArray(children).filter(c => c.type === child)[0];
+
+        const WhenTruthy = ({children}) => React.Children.only(children);
+
+        const WhenFalsy = ({children}) => React.Children.only(children);
+
+        const Display = ({ ifTruthy=true, children }) =>
+            (ifTruthy) ? findChild(children, WhenTruthy) : findChild(children, WhenFalsy);
+
+        const age = 19;
+
+        ReactDOM.render(
+            <Display ifTruthy={age >= 21}>
+                <WhenTruthy>
+                    <h1>You can enter</h1>
+                </WhenTruthy>
+                <WhenFalsy>
+                    <h1>Beat it Kid</h1>
+                </WhenFalsy>
+            </Display>,
+            document.getElementById('react-container')
+        );
+    </script>
+
+</body>
+</html>

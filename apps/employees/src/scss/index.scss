@@ -1,0 +1,24 @@
+@import "~bootstrap/scss/bootstrap";
+
+@import "./error-message";
+@import "./nav-bar";
+@import "./employees-page";
+
+.modal {
+	display: block;
+	background-color: rgba(0, 0, 0, 0.5);
+
+	.modal-body {
+		padding-bottom: 22px;
+	}
+}
+
+.spinner {
+	display: flex;
+	justify-content: center;
+	margin: 2rem 0;
+}
+
+.form-check-input {
+	top: 2px;
+}

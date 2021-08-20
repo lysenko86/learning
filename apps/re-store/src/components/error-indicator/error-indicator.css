@@ -1,0 +1,17 @@
+.error-msg__title {
+	font-weight: bold;
+	font-size: 26px;
+	line-height: 28px;
+}
+
+.error-msg__text {
+	padding-left: 20px;
+}
+
+.error-details:before {
+	display: block;
+	content: '';
+	height: 1px;
+	background-color: #721c24;
+	margin: 1rem 0 .4rem;
+}

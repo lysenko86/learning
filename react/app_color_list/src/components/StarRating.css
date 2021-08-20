@@ -1,0 +1,5 @@
+.star-rating p:before {
+    content: '';
+    display: block;
+    clear: both;
+}

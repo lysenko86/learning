@@ -1,0 +1,92 @@
+<!--
+    Коли батьківський компонент HiddenMessages міняє свій стейт (в методі
+    componentWillMount()), що в свою чергу міняє значення проперті 'hide' на
+    false для одного із повідомлень, то дочірній компонент HiddenMessage не знає
+    про це, оскільки його власний стейт не міняється, а міняється тільки значення
+    проперті props.hide, яке було використано при ініціалізації стейту в конструкторі.
+    Треба юзати componentWillReceiveProps() який викликається при зміні props. Але
+    якщо компоненту реально не потрібен стейт, то слід юзати компоненти без стейту
+    (використовувати батьківський стейт)
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Pure React Samples</title>
+</head>
+<body>
+    <div id="react-container"></div>
+    <script src="https://unpkg.com/react@15.4.2/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.4.2/dist/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.29/browser.js"></script>
+
+    <script type="text/babel">
+
+        class HiddenMessage extends React.Component {
+
+            constructor(props) {
+                super(props);
+                this.state = {
+                    hidden: props.hide ? props.hide : true
+                }
+            }
+
+            componentWillReceiveProps(nextProps) {
+                this.setState({ hidden: nextProps.hide });
+            }
+
+            render() {
+                const { children } = this.props;
+                const { hidden } = this.state;
+                return <p>{hidden ? children.replace(/[a-zA-Z0-9]/g, 'x') : children}</p>
+            }
+
+        }
+
+
+
+        class HiddenMessages extends React.Component {
+
+            constructor(props) {
+                super(props);
+                this.state = {
+                    messages: [
+                        'The crow crows after midnight',
+                        'Bring a watch and dark clothes to the spot',
+                        'Jericho Jericho Go'
+                    ],
+                    showing: -1
+                };
+            }
+
+            componentWillMount() {
+                this.interval = setInterval(() => {
+                    let { showing, messages } = this.state;
+                    showing = (++showing >= messages.length) ? -1 : showing;
+                    this.setState({ showing });
+                }, 1000);
+            }
+
+            componentWillUnmount() {
+                clearInterval(this.interval);
+            }
+
+            render() {
+                const { messages, showing } = this.state;
+                return <div className="hidden-messages">
+                    {messages.map((message, i) => <HiddenMessage key={i} hide={i!==showing}>{message}</HiddenMessage>)}
+                </div>
+            }
+
+        }
+
+        ReactDOM.render(
+            <HiddenMessages />,
+            document.getElementById('react-container')
+        )
+
+    </script>
+
+</body>
+</html>

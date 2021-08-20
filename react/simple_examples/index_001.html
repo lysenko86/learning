@@ -1,0 +1,88 @@
+<!--
+    - мінімалістичне підключення Реакту
+    - створення елементу React.createElement і дочірні елементи .children
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Pure React Samples</title>
+</head>
+<body>
+    <!-- Целевой контейнер -->
+    <div id="react-container"></div>
+
+    <!-- Библиотека React и ReactDOM -->
+    <script src="https://unpkg.com/react@15.4.2/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.4.2/dist/react-dom.js"></script>
+
+    <script>
+        // Чистый код React и JavaScript
+        var dish = React.createElement('h1', null, 'Baked Salmon');
+        ReactDOM.render(dish, document.getElementById('react-container'));
+
+
+
+        // Всі параметри, починаючи з 3-го будуть додані як дочірні
+        var list = React.createElement('ul', null,
+            React.createElement('li', null, '1 lb Salmon'),
+            React.createElement('li', null, '1 cup Pine Nuts'),
+            React.createElement('li', null, '2 cups Butter Lettuce'),
+            React.createElement('li', null, '1 Yellow Squash'),
+            React.createElement('li', null, '1/2 cup Olive Oil'),
+            React.createElement('li', null, '3 cloves of Garlic')
+        );
+        console.log(list);
+        ReactDOM.render(list, document.getElementById('react-container'));
+
+
+
+        // Повноцінний приклад
+        var list2 = React.createElement('section', {id: 'baked-salmon'},
+            React.createElement('h1', null, 'Baked Salmon'),
+            React.createElement('ul', {className: 'ingredients'},
+                React.createElement('li', null, '1 lb Salmon'),
+                React.createElement('li', null, '1 cup Pine Nuts'),
+                React.createElement('li', null, '2 cups Butter Lettuce'),
+                React.createElement('li', null, '1 Yellow Squash'),
+                React.createElement('li', null, '1/2 cup Olive Oil'),
+                React.createElement('li', null, '3 cloves of Garlic')
+            ),
+            React.createElement('section', {className: 'instructions'},
+                React.createElement('h2', null, 'Cooking instructions'),
+                React.createElement('p', null, 'Preheat the oven to 350 degrees.'),
+                React.createElement('p', null, 'Spread the olive oil around a glass baking dish.'),
+                React.createElement('p', null, 'Add the salmon, garlic, and pine...'),
+                React.createElement('p', null, 'Bake for 15 minutes.'),
+                React.createElement('p', null, 'Add the yellow squash and put...'),
+                React.createElement('p', null, 'Remove from oven and let cool for 15 ...'),
+            )
+        );
+        console.log(list2);
+        ReactDOM.render(list2, document.getElementById('react-container'));
+    </script>
+
+    <!-- Результат останнього елементу list2 -->
+    <section id="baked-salmon">
+        <h1>Baked Salmon</h1>
+        <ul class="ingredients">
+            <li>1 lb Salmon</li>
+            <li>1 cup Pine Nuts</li>
+            <li>2 cups Butter Lettuce</li>
+            <li>1 Yellow Squash</li>
+            <li>1/2 cup Olive Oil</li>
+            <li>3 cloves of Garlic</li>
+        </ul>
+        <section class="instructions">
+            <h2>Cooking instructions</h2>
+            <p>Preheat the oven to 350 degrees.</p>
+            <p>Spread the olive oil around a glass baking dish.</p>
+            <p>Add the salmon, garlic, and pine...</p>
+            <p>Bake for 15 minutes.</p>
+            <p>Add the yellow squash and put...</p>
+            <p>Remove from oven and let cool for 15 ...</p>
+        </section>
+    </section>
+</body>
+</html>

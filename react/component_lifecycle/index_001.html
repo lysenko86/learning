@@ -1,0 +1,102 @@
+<!--
+    - Життєвий цикл компонентів
+        - варіант для React.createClass()
+            - 1) getDefaultProps()
+            - 2) getInitialState()
+            - 3) componentWillMount()
+            - 4) render()
+            - 5) componentDidMount()
+            - 6) componentWillUnmount()
+        - варіант для ES6
+            - 1) constructor(props)
+            - 2) componentWillMount()
+            - 3) render()
+            - 4) componentDidMount()
+            - 5) componentWillUnmount()
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Pure React Samples</title>
+</head>
+<body>
+    <div id="react-container"></div>
+    <script src="https://unpkg.com/react@15.4.2/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.4.2/dist/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.29/browser.js"></script>
+
+    <script type="text/babel">
+
+        const getFakeMembers = count => new Promise((resolves, rejects) => {
+            const api = `https://api.randomuser.me/?nat=US&results=${count}`;
+            const request = new XMLHttpRequest();
+            request.open('GET', api);
+            request.onload = () => (request.status == 200) ?
+                resolves(JSON.parse(request.response).results) :
+                reject(Error(request.statusText))
+            request.onerror = err => rejects(err);
+            request.send();
+        });
+
+        const Member = ({ email, picture, name, location }) =>
+            <div className="member">
+                <img src={picture.thumbnail} alt="" />
+                <h1>{name.first} {name.last}</h1>
+                <p><a href={"mailto:" + email}>{email}</a></p>
+                <p>{location.city}, {location.state}</p>
+            </div>
+
+        class MemberList extends React.Component {
+            constructor() {
+                super();
+                this.state = {
+                    members: [],
+                    loading: false,
+                    error: null
+                };
+            }
+            componentWillMount() {
+                this.setState({ loading: true });
+                getFakeMembers(this.props.count).then(
+                    members => {
+                        this.setState({ members, loading: false });
+                    },
+                    error => {
+                        this.setState({ error, loading: false });
+                    }
+                );
+            }
+            componentDidMount() {
+                console.log('Component DID mount');
+            }
+            componentWillUpdate() {
+                console.log('updating lifecycle');
+            }
+            render() {
+                const { members, loading, error } = this.state;
+                return (
+                    <div className="member-list">
+                        {
+                            loading ?
+                                <span>Loading Members</span> :
+                                members.length ?
+                                    members.map((user, i) => <Member key={i} {...user} />) :
+                                    <span>0 members loaded...</span>
+                        }
+                        {error ? <p>Error Loading Members: error</p> : ''}
+                    </div>
+                )
+            }
+        }
+
+        ReactDOM.render(
+            <MemberList />,
+            document.getElementById('react-container')
+        )
+
+    </script>
+
+</body>
+</html>

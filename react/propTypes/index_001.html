@@ -1,0 +1,49 @@
+<!--
+    - перевірка значень props за допомогою React.PropTypes
+        - типи: array, bool, func, number, object, string
+        - приклад React.PropTypes.number
+        - можливість зробити значення обов'язковим .isRequired
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>React.PropTypes</title>
+</head>
+<body>
+    <div id="react-container"></div>
+    <script src="https://unpkg.com/react@15.4.2/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.4.2/dist/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.29/browser.js"></script>
+
+    <script type="text/babel">
+        // Перевірка props при використанні React.createClass
+        const Summary = React.createClass({
+            displayName: 'Summary',
+            propTypes: {
+                ingredients: React.PropTypes.array.isRequired,
+                steps: React.PropTypes.array.isRequired,
+                title: React.PropTypes.string
+            },
+            render() {
+                const {ingredients, steps, title} = this.props;
+                return (
+                    <div className="summary">
+                        <h1>{title}</h1>
+                        <p>
+                            <span>{ingredients.length} Ingredients</span> |
+                            <span>{steps.length}</span>
+                        </p>
+                    </div>
+                )
+            }
+        });
+
+        ReactDOM.render(<Summary />,
+            document.getElementById('react-container')
+        );
+    </script>
+
+</body>
+</html>

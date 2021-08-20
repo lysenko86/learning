@@ -1,0 +1,31 @@
+{
+    "name": "higher-order-component-1",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "buildJS": "node_modules/.bin/webpack",
+        "start": "npm run buildJS && node index.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "isomorphic-fetch": "^2.2.1"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.2.2",
+        "@babel/preset-env": "^7.5.5",
+        "@babel/preset-react": "^7.0.0",
+        "babel-loader": "^8.0.5",
+        "react": "^16.8.6",
+        "react-dom": "^16.8.6",
+        "webpack": "^4.39.1",
+        "webpack-cli": "^3.3.6"
+    },
+    "babel": {
+        "presets": [
+            "@babel/react",
+            "@babel/env"
+        ]
+    }
+}

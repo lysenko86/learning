@@ -1,0 +1,27 @@
+.employees-page {
+	&__table {
+		.btn {
+			margin-left: 5px;
+		}
+	}
+
+	&__top-bar {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		.input-group {
+			width: 250px;
+		}
+
+		.clear-btn {
+			width: 23px;
+			height: 24px;
+			padding: 0;
+			padding-left: 2px;
+			position: absolute;
+			left: -32px;
+			top: 7px;
+		}
+	}
+}

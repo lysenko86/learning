@@ -1,0 +1,97 @@
+<!--
+    - Створення компонентів
+    - 3 методи: createClass; class ES6; фукнціональні компоненти без стейту
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Pure React Samples</title>
+</head>
+<body>
+    <div id="react-container"></div>
+    <script src="https://unpkg.com/react@15.4.2/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.4.2/dist/react-dom.js"></script>
+
+    <script>
+        // Метод 1 - За допомогою React.createClass
+        /*const IngredientsList = React.createClass({
+            displayName: 'IngredientsList',
+            renderListItem(ingredient, i) {
+                return React.createElement('li', {key: i}, ingredient);
+            },
+            render() {
+                return React.createElement('ul', {className: 'ingredients'},
+                    this.props.items.map(this.renderListItem)
+                );
+            }
+        });
+
+        const items = [
+            '1 lb Salmon',
+            '1 cup Pine Nuts',
+            '2 cups Butter Lettuce',
+            '1 Yellow Squash',
+            '1/2 cup Olive Oil',
+            '3 cloves of Garlic'
+        ];
+
+        ReactDOM.render(React.createElement(IngredientsList, {items}, null),
+            document.getElementById('react-container')
+        );*/
+
+
+
+        // Метод 2 - За допомогою React.Component
+        /*class IngredientsList extends React.Component {
+            renderListItem(ingredient, i) {
+                return React.createElement('li', {key: i}, ingredient)
+            }
+            render() {
+                return React.createElement('ul', {className: 'ingredients'},
+                    this.props.items.map(this.renderListItem)
+                );
+            }
+        }
+
+        const items = [
+            '1 lb Salmon',
+            '1 cup Pine Nuts',
+            '2 cups Butter Lettuce',
+            '1 Yellow Squash',
+            '1/2 cup Olive Oil',
+            '3 cloves of Garlic'
+        ];
+
+        ReactDOM.render(React.createElement(IngredientsList, {items}, null),
+            document.getElementById('react-container')
+        );*/
+
+
+
+        // Метод 3 - За допомогою фукнціональних компонентів без стейту
+        /*const IngredientsList = props => React.createElement('ul', {className: 'ingredients'},
+            props.items.map((ingredient, i) => React.createElement('li', {key: i}, ingredient))
+        );*/
+        // Покращення за допомогою деструктуризації
+        const IngredientsList = ({items}) => React.createElement('ul', {className: 'ingredients'},
+            items.map((ingredient, i) => React.createElement('li', {key: i}, ingredient))
+        );
+
+        const items = [
+            '1 lb Salmon',
+            '1 cup Pine Nuts',
+            '2 cups Butter Lettuce',
+            '1 Yellow Squash',
+            '1/2 cup Olive Oil',
+            '3 cloves of Garlic'
+        ];
+
+        ReactDOM.render(React.createElement(IngredientsList, {items}, null),
+            document.getElementById('react-container')
+        );
+    </script>
+
+</body>
+</html>

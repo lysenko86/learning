@@ -1,0 +1,72 @@
+<!--
+    - будь-які процеси запущені в componentDidMount() та componentWillMount()
+        можуть бути зупинені в componentWillUnmount()
+    - непотрібні фонові процеси треба видаляти
+    - компоненти видаляються з екрану, коли видаляються своїми батьківськими
+        компонентами, або методом unmountComponentAtNode(), який видаляє
+        кореневий компонент. Коли видаляється кореневий компонент, то спочатку
+        видаляються всі його дочірні елементи
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Pure React Samples</title>
+</head>
+<body>
+    <div id="react-container"></div>
+    <script src="https://unpkg.com/react@15.4.2/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.4.2/dist/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.29/browser.js"></script>
+
+    <script type="text/babel">
+
+        const target = document.getElementById('react-container');
+
+        const getClockTime = () => {
+            const time = new Date();
+            return {
+                hours: time.getHours(),
+                minutes: time.getMinutes(),
+                seconds: time.getSeconds()
+            }
+        }
+
+        class Clock extends React.Component {
+            constructor() {
+                super();
+                this.state = getClockTime();
+            }
+            componentDidMount() {
+                console.log('Starting Clock');
+                this.ticking = setInterval(() => this.setState(getClockTime()), 1000)
+            }
+            componentWillUnmount() {
+                clearInterval(this.ticking);
+                console.log('Stopping Clock');
+            }
+            render() {
+                const { hours, minutes, seconds } = this.state;
+                return (
+                    <div className="clock">
+                        <span>{hours}</span>
+                        <span>:</span>
+                        <span>{minutes}</span>
+                        <span>:</span>
+                        <span>{seconds}</span>
+                        <button onClick={this.props.onClose}>x</button>
+                    </div>
+                )
+            }
+        }
+
+        ReactDOM.render(
+            <Clock onClose={() => ReactDOM.unmountComponentAtNode(target)} />,
+            target
+        )
+
+    </script>
+
+</body>
+</html>

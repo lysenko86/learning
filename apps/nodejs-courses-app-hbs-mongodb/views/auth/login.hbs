@@ -13,7 +13,7 @@
       {{/if}}
 
       <h1>Зайти в магаз</h1>
-      <form action="/auth/login" method="post">
+      <form action="/auth/login" method="POST">
 
         <div class="input-field">
           <input id="email" name="email" type="email" class="validate" required>
@@ -29,6 +29,8 @@
 
         <input type="hidden" name="_csrf" value="{{csrf}}">
 
+        <p><a href="/auth/reset">Забули пароль?</a></p>
+
         <button class="btn btn-primary" type="submit">Увійти</button>
 
       </form>
@@ -40,10 +42,10 @@
       {{/if}}
 
       <h1>Створити акк</h1>
-      <form action="/auth/register" method="post">
+      <form action="/auth/register" method="POST">
 
         <div class="input-field">
-          <input id="remail" name="email" type="text" class="validate" required>
+          <input id="remail" name="email" type="email" class="validate" required>
           <label for="remail">Email</label>
           <span class="helper-text" data-error="Введіть email"></span>
         </div>

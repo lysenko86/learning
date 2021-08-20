@@ -19,7 +19,9 @@ router.get("/", auth, async (req, res) => {
         ),
       })),
     });
-  } catch (e) {}
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 router.post("/", auth, async (req, res) => {

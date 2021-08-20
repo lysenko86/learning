@@ -44,6 +44,7 @@ const hbs = exphbs.create({
     allowProtoPropertiesByDefault: true,
     allowProtoMethodsByDefault: true,
   },
+  helpers: require("./utils/hbs-helpers"),
 });
 app.engine("hbs", hbs.engine);
 app.set("view engine", "hbs");

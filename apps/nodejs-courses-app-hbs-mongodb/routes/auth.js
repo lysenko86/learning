@@ -1,9 +1,11 @@
 const { Router } = require("express");
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto"); // стандартна ліба як і fs
 const mailgun = require("mailgun-js");
 const User = require("../models/user");
 const keys = require("../keys");
 const regEmail = require("../emails/registration");
+const resetEmail = require("../emails/reset");
 const router = Router();
 
 function sendMail(objEmail) {
@@ -97,6 +99,91 @@ router.post("/register", async (req, res) => {
         // Відправку пошти, або різні коли подібні варто робити після редіректу, щоб не тормозило
         sendMail(regEmail(email));
       }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+router.get("/reset", (req, res) => {
+  res.render("auth/reset", {
+    title: "Забули пароль?",
+    error: req.flash("error"),
+  });
+});
+
+router.post("/reset", (req, res) => {
+  try {
+    // Генерує токен довжиною 32 символи
+    crypto.randomBytes(32, async (err, buffer) => {
+      if (err) {
+        req.flash("error", "Щось пішло не так, спробуйте пізніше ще раз");
+        return res.redirect("/auth/reset");
+      }
+
+      const token = buffer.toString("hex");
+      const candidate = await User.findOne({ email: req.body.email });
+
+      if (candidate) {
+        candidate.resetToken = token;
+        candidate.resetTokenExp = Date.now() + 60 * 60 * 1000;
+        await candidate.save();
+        sendMail(resetEmail(candidate.email, token));
+        res.redirect("/auth/login");
+      } else {
+        req.flash("error", "Такого email нема");
+        res.redirect("/auth/reset");
+      }
+    });
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+router.get("/password/:token", async (req, res) => {
+  if (!req.params.token) {
+    return res.redirect("/auth/login");
+  }
+
+  try {
+    const user = await User.findOne({
+      resetToken: req.params.token,
+      resetTokenExp: { $gt: Date.now() },
+      // $gt - https://metanit.com/nosql/mongodb/2.8.php
+    });
+
+    if (!user) {
+      return res.redirect("/auth/login");
+    } else {
+      res.render("auth/password", {
+        title: "Відновити доступ",
+        error: req.flash("error"),
+        userId: user._id.toString(),
+        token: req.params.token,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+router.post("/password", async (req, res) => {
+  try {
+    const user = await User.findOne({
+      _id: req.body.userId,
+      resetToken: req.body.token,
+      resetTokenExp: { $gt: Date.now() },
+    });
+
+    if (user) {
+      user.password = await bcrypt.hash(req.body.password, 10);
+      user.resetToken = undefined;
+      user.resetTokenExp = undefined;
+      await user.save();
+      res.redirect("/auth/login");
+    } else {
+      req.flash("loginError", "Час актуальності токена вичерпано");
+      res.redirect("/auth/login");
     }
   } catch (e) {
     console.log(e);

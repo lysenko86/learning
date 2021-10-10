@@ -1,11 +1,17 @@
 const { Router } = require("express");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto"); // стандартна ліба як і fs
+const { validationResult } = require("express-validator");
+// пакет для різних перевірок, просто обгортка пакету validator.js для express
+// https://github.com/express-validator/express-validator
+// https://github.com/validatorjs/validator.js
 const mailgun = require("mailgun-js");
 const User = require("../models/user");
 const keys = require("../keys");
 const regEmail = require("../emails/registration");
 const resetEmail = require("../emails/reset");
+const { registerValidators } = require("../utils/validators");
+// імпортуємо наші валідатори, юзаємо як мідлвер
 const router = Router();
 
 function sendMail(objEmail) {
@@ -68,10 +74,20 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/register", async (req, res) => {
+router.post("/register", registerValidators, async (req, res) => {
+  // юзаємо валідатор як мідлВер, перед останнім параметром - може бути скільки хоч параметрів-мідлВарів
   try {
     const { email, password, confirm, name } = req.body;
     const candidate = await User.findOne({ email });
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      // цей метод видає true, якщо помилок немає
+      // якщо помилки є, то метод array() поверне масив помилок
+      req.flash("registerError", errors.array()[0].msg);
+      return res.status(422).redirect("/auth/login#register"); // 422 - Звичайний HTTP статус який вказує на помилки валідації
+    }
+
     if (candidate) {
       // метод req.flash() додався внаслідок мідлВеру, першим параметром - ключ повідомлення, а другим - саме повідомлення
       // сетає значення (повідомлення) по ключу (перший параметр) в сесію, а отже, ці дані доступні між реквестами
